@@ -1,0 +1,56 @@
+{
+  "name": "ipfs-webportal",
+  "version": "0.3.6-beta1",
+  "description": "IPFS storage Webportal interface with tus",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "yarn lint:eslint",
+    "lint:eslint": "eslint . --max-warnings 0",
+    "build": "rollup --format cjs ./server.js > server.cjs",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --max-warnings 0",
+      "prettier --write"
+    ],
+    "*.{json,yml,md}": [
+      "prettier --write"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parajbs-dev/ipfs-webportal.git"
+  },
+  "author": "parajbs-dev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/parajbs-dev/ipfs-webportal/issues"
+  },
+  "homepage": "https://github.com/parajbs-dev/ipfs-webportal#readme",
+  "dependencies": {
+    "axios": "^1.2.1",
+    "process": "^0.11.10",
+    "minimist": "^1.2.7",
+    "devcert": "^1.2.2",
+    "body-parser": "^1.20.1",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "https": "^1.0.0",
+    "form-data": "^4.0.0",
+    "fs": "^0.0.1-security",
+    "ipfs-http-client": "^56.0.2",
+    "rollup": "^2.79.0",
+    "tus-node-server": "^0.7.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "lint-staged": "^13.0.0",
+    "prettier": "^2.0.5",
+    "tmp": "0.2.1"
+  }
+}

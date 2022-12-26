@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>IPFS PORTAL GATEWAY for Decentralized Internet</title>
+    <meta
+      name="description"
+      content="IPFS Upload File or .CAR and Share for free, Browse by QmHash/bafyHash. No Sign Up Required, Unlimited Space, Unlimited Bandwidth, 128GB Maximum File Upload Size."
+    />
+
+    <link rel="shortcut icon" href="/webportal/favicon.ico" />
+    <link href="/webportal/favicon.ico" rel="icon" type="image/x-icon" />
+
+    <link href="/webportal/scripts/bootstrap-5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/webportal/scripts/progressBar.min.css" rel="stylesheet" media="screen" />
+    <link href="/webportal/scripts/main.css" rel="stylesheet" />
+
+    <script src="/webportal/scripts/bootstrap-5.2.0/dist/js/bootstrap.min.js"></script>
+    <script src="/webportal/scripts/clipboard.min.js"></script>
+    <script src="/webportal/scripts/jquery-3.6.0.min.js"></script>
+    <script src="/webportal/scripts/qrcode.min.js"></script>
+    <script src="/webportal/scripts/tus/tus.min.js"></script>
+
+    <script type="module">
+      import "/webportal/scripts/autodetect/example.js";
+
+      const options = document.querySelector("auto-ipfs-options");
+      const upload = document.querySelector("auto-ipfs-upload");
+
+      options.addEventListener("selected", ({ detail }) => {
+        let lll = localStorage.getItem("selected", detail);
+        const selected = detail;
+        console.log("Options changed", selected);
+        upload.setAttribute("selected", selected);
+      });
+
+      $(document).ready(function () {
+        $(".trigger-m").click(function () {
+          $(".panel-wrapper").css("height", "240").slideToggle("slow");
+        });
+      });
+
+      import "/webportal/scripts/pin-manager/pin-list.js";
+      import "/webportal/scripts/pin-manager/pin-manager.js";
+
+      $(window).ready(function () {
+        if ($(window).width() < 740) {
+          $("#grid_id1, #grid_id2").removeClass("grid-container");
+          //  alert('Less than 960');
+        } else {
+          $("#grid_id1, #grid_id2").addClass("grid-container");
+          // alert('More than 960');
+        }
+      });
+
+      $(window).resize(function () {
+        if ($(window).width() < 740) {
+          $("#grid_id1, #grid_id2").removeClass("grid-container");
+          //  alert('Less than 960');
+        } else {
+          $("#grid_id1, #grid_id2").addClass("grid-container");
+          // alert('More than 960');
+        }
+      });
+
+      destinationTableBody;
+    </script>
+
+    <style>
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: 1fr;
+        grid-column-gap: 4px;
+        grid-row-gap: 0px;
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-columns: minmax(300px, 50%) minmax(auto, 50%);
+        grid-template-rows: 1fr;
+        grid-column-gap: 4px;
+        grid-row-gap: 0px;
+      }
+
+      .grid-container,
+      .grid-container > * {
+      }
+
+      .grid-container > * {
+        word-break: break-word;
+      }
+    </style>
+  </head>
+  <body style="min-width: 500px">
+    <div class="overflow-hidden">
+      <div class="sticky-top" style="background-color: #00042e; opacity: 0.9">
+        <nav class="navbar">
+          <div class="container">
+            <a class="navbar-brand text-white h1" href="index.html" style="text-transform: uppercase">
+              ipfs-webPortal
+            </a>
+            <div id="toppanel" class="toppanel">
+              <div class="panel-container">
+                <div class="panel-wrapper">
+                  <div class="panel">
+                    <div class="content">
+                      <auto-ipfs-options></auto-ipfs-options>
+                    </div>
+                  </div>
+                </div>
+                <div class="trigger" style="margin-right: 250px">
+                  <div class="trigger-l"></div>
+                  <div class="trigger-m">TopPanel</div>
+                  <div class="trigger-r"></div>
+                </div>
+              </div>
+            </div>
+            <br />
+          </div>
+        </nav>
+      </div>
+
+      <div class="section-intro">
+        <div class="container-fluid" style="width: 50%">
+          <div class="row box_row">
+            <h1 class="text-white">
+              <span style="text-transform: uppercase">IPFS webPORTAL </span><br />for
+              <span class="text-primary underline-white">Decentralized Internet</span>
+            </h1>
+            <p class="text-white">
+              IPFS Upload File or .CAR and Share for free, Browse by QmHash/bafyHash.<br />
+              No Sign Up Required, Unlimited Space, Unlimited Bandwidth, 32GB Maximum File Upload Size.
+            </p>
+            <p class="text-white">(Beta v0.3.6)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <div class="section-browse rounded">
+          <div class="input-group p-3 mb-3">
+            <input
+              id="ipfsHash"
+              type="text"
+              class="form-control"
+              placeholder="QmHash/bafyHash"
+              aria-describedby="inputGroup-sizing-lg"
+            />
+            <button onclick="HashBrowse()" type="button" class="btn btn-primary">Browse</button>
+            <button onclick="HashCarDownload()" type="button" class="btn btn-secondary">.CAR</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <div class="section-upload shadow rounded">
+          <ul id="tabs">
+            <li><a id="tab1">Upload File</a></li>
+            <li><a id="tab2">Upload Folder</a></li>
+            <li><a id="tab3">Pinning 📌</a></li>
+          </ul>
+          <hr style="margin-left: -0px; margin-right: -0px" />
+          <div class="container2" id="tab1C">
+            <div class="container-fluid">
+              <div class="row">
+                <div style="margin-top: 10px">
+                  <div class="progress progress-striped progress-success">
+                    <div class="bar" style="width: 0%"></div>
+                  </div>
+                </div>
+                <div class="UploadZone">
+                  <div class="drop-zone">
+                    <auto-ipfs-upload></auto-ipfs-upload>
+                  </div>
+                  <div class="for-StatusBar"></div>
+                  <div id="section-alert"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="container2" id="tab2C">
+            <div class="UploadZone">
+              <div class="drop-zone">
+                <label for="files">Drop Directory or Choose</label>
+                <input
+                  type="file"
+                  name="files[]"
+                  id="inputDir"
+                  directory=""
+                  webkitdirectory=""
+                  mozdirectory=""
+                  style="width: 100%; opacity: 0"
+                />
+              </div>
+              <div class="for-StatusBar"></div>
+              <div id="section-alert2"></div>
+            </div>
+          </div>
+
+          <div class="container2" id="tab3C">
+            <div class="UploadZone">
+              <div class="pin-zone">
+                <main>
+                  <div>
+                    <div>
+                      <div>
+                        <div>
+                          <div class="mx-auto text-center">
+                            <div class="bg-white">
+                              <button
+                                type="submit"
+                                id="syncSubmitButton"
+                                class="btn btn-success disabled inline-flex items-center px-6 py-1 mb-3 border border-transparent text-base font-medium rounded-md shadow-sm bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ffa500]"
+                              >
+                                Sync
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div id="grid_id1" class="grid-container">
+                          <div>
+                            <div>
+                              <div class="bg-white py-4 px-4 shadow">
+                                <h5 class="text-center">Source Provider</h5>
+                                <form name="sourceLogin" class="space-y-6">
+                                  <center>
+                                    <div>
+                                      <label for="email" class="block text-sm font-medium text-gray-700">
+                                        Endpoint
+                                      </label>
+                                      <div class="mt-1">
+                                        <select name="pets" id="pet-select" onchange="getSrcVal(this);">
+                                          <option value="">--Please choose an option--</option>
+                                          <option value="https://api.pinata.cloud/psa">Pinata</option>
+                                          <option value="https://api.nft.storage">NFT.Storage</option>
+                                          <option value="https://api.web3.storage">Web3.Storage</option>
+                                          <option value="https://api.estuary.tech/">Estuary</option>
+                                          <option value="https://api.filebase.io/v1/ipfs">Filebase</option>
+                                          <option value="https://ipfs.infura.io:5001/api/v0/">Infura</option>
+                                        </select>
+
+                                        <input
+                                          placeholder=""
+                                          value=""
+                                          type="text"
+                                          name="endpoint"
+                                          id="inputSourceEndpoint"
+                                          required
+                                          class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                          hidden
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div>
+                                      <label for="password" class="block text-sm font-medium text-gray-700" hidden>
+                                        Token
+                                      </label>
+                                      <div class="mt-1">
+                                        <input
+                                          type="password"
+                                          name="token"
+                                          id="inputSourceToken"
+                                          required
+                                          class="appearance-none block w-full px-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                          style="visibility: hidden"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div>
+                                      <button
+                                        type="submit"
+                                        id="sourceSubmitButton"
+                                        class="btn btn-warning w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffa500] hover:bg-[#eb9100] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ffa500]"
+                                        disabled
+                                      >
+                                        Login to Source
+                                      </button>
+                                    </div>
+                                  </center>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <div>
+                              <div class="bg-white py-4 px-4 shadow">
+                                <h5 class="text-center">Destination Provider</h5>
+                                <form name="destinationLogin" class="space-y-6">
+                                  <center>
+                                    <div>
+                                      <label for="email" class="block text-sm font-medium text-gray-700">
+                                        Endpoint
+                                      </label>
+                                      <div class="mt-1">
+                                        <select name="pets2" id="pet-select2" onchange="getDestVal(this);">
+                                          <option value="">--Please choose an option--</option>
+                                          <option value="https://api.pinata.cloud/psa">Pinata</option>
+                                          <option value="https://api.nft.storage/">NFT.Storage</option>
+                                          <option value="https://api.web3.storage/">Web3.Storage</option>
+                                          <option value="https://api.estuary.tech/">Estuary</option>
+                                          <option value="https://api.filebase.io/v1/ipfs">Filebase</option>
+                                          <option value="https://ipfs.infura.io:5001/api/v0/">Infura</option>
+                                        </select>
+                                        <input
+                                          placeholder=""
+                                          value=""
+                                          type="text"
+                                          name="endpoint"
+                                          id="inputDestinationEndpoint"
+                                          required
+                                          class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                          hidden
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div>
+                                      <label for="password" class="block text-sm font-medium text-gray-700" hidden>
+                                        Token
+                                      </label>
+                                      <div class="mt-1">
+                                        <input
+                                          type="password"
+                                          name="token"
+                                          id="inputDestinationToken"
+                                          required
+                                          class="appearance-none block w-full px-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                          style="visibility: hidden"
+                                        />
+                                      </div>
+                                    </div>
+
+                                    <div>
+                                      <button
+                                        type="submit"
+                                        id="destinationSubmitButton"
+                                        class="btn btn-warning w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#ffa500] hover:bg-[#eb9100] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ffa500]"
+                                        disabled
+                                      >
+                                        Login to Destination
+                                      </button>
+                                    </div>
+                                  </center>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div id="grid_id2" class="grid-container">
+                          <div>
+                            <div>
+                              <div class="mt-8 flex flex-col">
+                                <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                  <div class="inline-block min-w-full py-2 align-middle md:px-1 lg:px-1">
+                                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                      <table id="sourceTable" class="min-w-full divide-y divide-gray-300 z-50">
+                                        <thead class="bg-gray-50">
+                                          <tr>
+                                            <th
+                                              scope="col"
+                                              class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                            >
+                                              Source
+                                            </th>
+                                          </tr>
+                                        </thead>
+                                        <tbody id="sourceTableBody" class="divide-y divide-gray-200 bg-white"></tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <div>
+                              <div class="mt-8 flex flex-col">
+                                <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                  <div class="inline-block min-w-full py-2 align-middle md:px-1 lg:px-1">
+                                    <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                      <table id="destinationTable" class="min-w-full divide-y divide-gray-300 z-50">
+                                        <thead class="bg-gray-50">
+                                          <tr>
+                                            <th
+                                              scope="col"
+                                              class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                            >
+                                              Destination
+                                            </th>
+                                          </tr>
+                                        </thead>
+                                        <tbody
+                                          id="destinationTableBody"
+                                          class="divide-y divide-gray-200 bg-white"
+                                        ></tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </main>
+              </div>
+              <div class="for-StatusBar"></div>
+              <div id="section-alert3"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="clickHere" style="display: none">
+        <input type="file" name="file" id="file" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <div class="section-body shadow rounded">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="uploaded-files">
+                <h5>Uploaded file:</h5>
+                <table class="table table-striped table-hover" style="width: 100%">
+                  <colgroup>
+                    <col width="90%" />
+                    <col width="10%" />
+                  </colgroup>
+                  <tbody id="tbody_cid">
+                    <tr id="upload_cid" style="display: none">
+                      <td style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden; max-width: 1px">
+                        <div class="d-flex justify-content-between align-items-start">
+                          <div class="ms-2 me-auto d-inline-block">
+                            <div class="fw-bold">
+                              <a
+                                id="cidA"
+                                style="text-decoration: none"
+                                href="http://localhost:8080/ipfs/"
+                                target="_blank"
+                                >youtube.zip</a
+                              >
+                            </div>
+                            <div id="cidHash"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          id="btn1"
+                          class="btn btn-primary"
+                          style="
+                            --bs-btn-padding-y: 0.25rem;
+                            --bs-btn-padding-x: 0.5rem;
+                            --bs-btn-font-size: 0.75rem;
+                            display: none;
+                          "
+                        >
+                          <span class="bi bi-clipboard"></span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="35"
+                            height="35"
+                            fill="currentColor"
+                            class="bi bi-qr-code"
+                            viewBox="0 0 16 16"
+                          >
+                            <path d="M2 2h2v2H2V2Z" />
+                            <path d="M6 0v6H0V0h6ZM5 1H1v4h4V1ZM4 12H2v2h2v-2Z" />
+                            <path d="M6 10v6H0v-6h6Zm-5 1v4h4v-4H1Zm11-9h2v2h-2V2Z" />
+                            <path
+                              d="M10 0v6h6V0h-6Zm5 1v4h-4V1h4ZM8 1V0h1v2H8v2H7V1h1Zm0 5V4h1v2H8ZM6 8V7h1V6h1v2h1V7h5v1h-4v1H7V8H6Zm0 0v1H2V8H1v1H0V7h3v1h3Zm10 1h-1V7h1v2Zm-1 0h-1v2h2v-1h-1V9Zm-4 0h2v1h-1v1h-1V9Zm2 3v-1h-1v1h-1v1H9v1h3v-2h1Zm0 0h3v1h-2v1h-1v-2Zm-4-1v1h1v-2H7v1h2Z"
+                            />
+                            <path d="M7 12h1v3h4v1H7v-4Zm9 2v2h-3v-1h2v-1h1Z" />
+                          </svg>
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          id="urlCopyButton"
+                          type="button"
+                          data-clipboard-target="#foo"
+                          class="btn btncopy btn-primary btn-ClipboardJS"
+                          style="
+                            --bs-btn-padding-y: 0.25rem;
+                            --bs-btn-padding-x: 0.5rem;
+                            --bs-btn-font-size: 0.75rem;
+                            display: none;
+                          "
+                        >
+                          <span class="bi bi-clipboard"></span> COPY LINK
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <div class="section-uploadListLabel">
+          <h3>Uploads-List</h3>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <div class="section-uploadList shadow rounded">
+          <div class="container-fluid">
+            <div class="row">
+              <p id="upload-list" align="center">
+                <br />
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid section-footer" style="padding-top: 2%">
+        <div class="row">
+          <input id="foo" value="" style="opacity: 0" />
+        </div>
+        <p id="footerContact" class="text-white" style="margin-bottom: 0">
+          contact us at (24/7): hello@ipfs.io <br />
+          report abuse: abuse@ipfs.io
+        </p>
+      </div>
+    </div>
+
+    <div id="login2" runat="server">
+      <div class="modal fff fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="mySmallModalLabel2">QR2-CODE</h4>
+            </div>
+            <div class="modal-body">
+              <div class="qr-code-container">
+                <center><div class="qr-code2" style></div></center>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="login" runat="server">
+      <div
+        class="modal uplMain fade bs-example-modal-sm"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="mySmallModalLabel"
+      >
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="mySmallModalLabel">QR-CODE</h4>
+            </div>
+            <div class="modal-body">
+              <div class="qr-code-container">
+                <center><div class="qr-code" style></div></center>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script type="text/javascript">
+    var detectedOptionsJB;
+
+    var Hostname = window.location.hostname;
+    var Host = window.location.host;
+    var TusServer;
+    var TusPort;
+    var TusServerProtocol;
+    var TusUploadServer;
+    var IpfsGataway;
+    var IpfsApiServer;
+    var HostIpfsGataway =
+      window.location.protocol +
+      "//" +
+      window.location.hostname +
+      (window.location.port ? ":" + window.location.port : "");
+
+    async function load() {
+      let url = HostIpfsGataway + "/webportal/config.json";
+      let obj = await (await fetch(url)).json();
+      IpfsGataway = obj.ipfsprotocol + "://" + obj.ipfshost + ":" + obj.ipfsgatewayport;
+      TusUploadServer = obj.tusprotocol + "://" + obj.tushost + ":" + obj.tusport;
+      IpfsApiServer = obj.ipfsprotocol + "://" + obj.ipfshost + ":" + obj.ipfsapiport;
+    }
+
+    load();
+
+    $(document).ready(function () {
+      document.getElementById(
+        "footerContact"
+      ).innerHTML = `contact us at (24/7): hello@${Hostname}  </br> report abuse: abuse@${Hostname} `;
+      $("#tabs li a:not(:first)").addClass("inactive");
+      $(".container2").hide();
+      $(".container2:first").show();
+
+      $("#tabs li a").click(function () {
+        var t = $(this).attr("id");
+        if ($(this).hasClass("inactive")) {
+          //this is the start of our condition
+          $("#tabs li a").addClass("inactive");
+          $(this).removeClass("inactive");
+          $(".container2").hide();
+          $("#" + t + "C").fadeIn("slow");
+        }
+        document.getElementById("cidA").innerHTML = "";
+        document.getElementById("cidHash").innerHTML = "";
+        document.getElementById("upload_cid").style.display = "none";
+        document.getElementById("btn1").style.display = "none";
+        document.getElementById("urlCopyButton").style.display = "none";
+      });
+    });
+
+    function HashBrowse() {
+      const HashBrowse = document.getElementById("ipfsHash").value;
+      if (HashBrowse != "") {
+        const url = IpfsGataway + "/ipfs/";
+        window.open(url + HashBrowse, "_blank").focus();
+      } else {
+        document.getElementById("ipfsHash").focus();
+      }
+      document.getElementById("ipfsHash").value = "";
+      document.getElementById("upload_cid").style.display = "none";
+    }
+
+    function HashCarDownload() {
+      const HashBrowse = document.getElementById("ipfsHash").value;
+      if (HashBrowse != "") {
+        const url = IpfsGataway + "/ipfs/";
+        window.open(url + HashBrowse + "?format=car", "_blank").focus();
+      } else {
+        document.getElementById("ipfsHash").focus();
+      }
+      document.getElementById("ipfsHash").value = "";
+      document.getElementById("upload_cid").style.display = "none";
+    }
+
+    $("#btn1").click(function () {
+      $(".uplMain").modal("show");
+    });
+
+    let qr_code_element = document.querySelector(".qr-code2");
+
+    function generate_uploadList(user_input) {
+      qr_code_element.style = "";
+      var qrcode = new QRCode(qr_code_element, {
+        text: `${user_input.value}`,
+        width: 180, //128
+        height: 180,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+      let download = document.createElement("button");
+      qr_code_element.appendChild(download);
+      let download_link = document.createElement("a");
+      download_link.setAttribute("download", "qr_code.png");
+      download_link.innerHTML = `QR-Code<i class="fa-solid fa-download"></i>`;
+      download.appendChild(download_link);
+
+      let download2 = document.createElement("button");
+      qr_code_element.appendChild(download2);
+
+      let download_link2 = document.createElement("a");
+      download_link2.setAttribute("download2", "qr_code.png");
+      download_link2.innerHTML = `Sharing <i class="fa-solid fa-download"></i>`;
+      download2.appendChild(download_link2);
+
+      if (!navigator.share) {
+        throw new Error("Web Share API is not supported.");
+      }
+
+      download2.onclick = (e) => {
+        navigator.share({
+          title: "Share ipfs cid",
+          text: "Check out this Ipfs Cid shared over locahost:8080 !",
+          url: `${user_input.value}`,
+        });
+      };
+
+      let qr_code_img = document.querySelector(".qr-code img");
+      let qr_code_canvas = document.querySelector("canvas");
+      if (qr_code_img.getAttribute("src") == null) {
+        setTimeout(() => {
+          download_link.setAttribute("href", `${qr_code_canvas.toDataURL()}`);
+        }, 300);
+      } else {
+        setTimeout(() => {
+          download_link.setAttribute("href", `${qr_code_img.getAttribute("src")}`);
+        }, 300);
+      }
+    }
+
+    const isEmpty = (str) => !str.trim().length;
+
+    function getSrcVal(sel) {
+      let stbody = document.getElementById("sourceTableBody");
+      stbody.innerHTML = "";
+
+      console.log(sel.value);
+      document.getElementById("inputSourceEndpoint").value = sel.value;
+      document.getElementById("inputSourceToken").value = "";
+      document.getElementById("inputSourceToken").style.visibility = "hidden";
+      document.getElementById("sourceSubmitButton").disabled = true;
+      document.getElementById("syncSubmitButton").classList.add("disabled");
+      const selText = $(":selected", sel).text();
+
+      console.log("dddd:  " + selText);
+
+      if (selText === "Pinata") {
+        const pintaSrcToken = document.getElementById("pinataStorageToken").value;
+        if (pintaSrcToken !== "") {
+          document.getElementById("sourceSubmitButton").disabled = false;
+          document.getElementById("inputSourceToken").value = pintaSrcToken;
+        } else {
+          document.getElementById("inputSourceToken").style.visibility = "visible";
+          document.getElementById("inputSourceToken").value = "";
+          document.getElementById("inputSourceToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("sourceSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("sourceSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+
+      if (selText === "NFT.Storage") {
+        const nftSrcToken = document.getElementById("nftStorageToken").value;
+        if (nftSrcToken !== "") {
+          document.getElementById("sourceSubmitButton").disabled = false;
+          document.getElementById("inputSourceToken").value = nftSrcToken;
+        } else {
+          document.getElementById("inputSourceToken").style.visibility = "visible";
+          document.getElementById("inputSourceToken").value = "";
+          document.getElementById("inputSourceToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("sourceSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("sourceSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+
+      if (selText === "Web3.Storage") {
+        const web3SrcToken = document.getElementById("web3StorageToken").value;
+        if (web3SrcToken !== "") {
+          document.getElementById("sourceSubmitButton").disabled = false;
+          document.getElementById("inputSourceToken").value = web3SrcToken;
+        } else {
+          document.getElementById("inputSourceToken").style.visibility = "visible";
+          document.getElementById("inputSourceToken").value = "";
+          document.getElementById("inputSourceToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("sourceSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("sourceSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+
+      if (selText === "Estuary") {
+        const estuarySrcToken = document.getElementById("estuaryToken").value;
+        if (estuarySrcToken !== "") {
+          document.getElementById("sourceSubmitButton").disabled = false;
+          document.getElementById("inputSourceToken").value = estuarySrcToken;
+        } else {
+          document.getElementById("inputSourceToken").style.visibility = "visible";
+          document.getElementById("inputSourceToken").value = "";
+          document.getElementById("inputSourceToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("sourceSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("sourceSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+
+      if (selText === "Filebase") {
+        const filebaseSrcToken = document.getElementById("filebaseToken").value;
+        if (filebaseSrcToken !== "") {
+          document.getElementById("sourceSubmitButton").disabled = false;
+          document.getElementById("inputSourceToken").value = filebaseSrcToken;
+        } else {
+          document.getElementById("inputSourceToken").style.visibility = "visible";
+          document.getElementById("inputSourceToken").value = "";
+          document.getElementById("inputSourceToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("sourceSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("sourceSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+
+      if (selText === "Infura") {
+        const infuraSrcToken = document.getElementById("infuraProjectSecret").value;
+        if (infuraSrcToken !== "") {
+          document.getElementById("sourceSubmitButton").disabled = false;
+          document.getElementById("inputSourceToken").value = infuraSrcToken;
+        } else {
+          document.getElementById("inputSourceToken").style.visibility = "visible";
+          document.getElementById("inputSourceToken").value = "";
+          document.getElementById("inputSourceToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("sourceSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("sourceSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+    }
+
+    function getDestVal(sel) {
+      let dtbody = document.getElementById("destinationTableBody");
+      dtbody.innerHTML = "";
+      console.log(sel.value);
+      document.getElementById("inputDestinationEndpoint").value = sel.value;
+      document.getElementById("inputDestinationToken").value = "";
+      document.getElementById("inputDestinationToken").style.visibility = "hidden";
+      document.getElementById("destinationSubmitButton").disabled = true;
+      document.getElementById("syncSubmitButton").classList.add("disabled");
+      const selText = $(":selected", sel).text();
+
+      if (selText === "Pinata") {
+        const pintaSrcToken = document.getElementById("pinataStorageToken").value;
+        if (pintaSrcToken !== "") {
+          document.getElementById("destinationSubmitButton").disabled = false;
+          document.getElementById("inputDestinationToken").value = pintaSrcToken;
+        } else {
+          document.getElementById("inputDestinationToken").style.visibility = "visible";
+          document.getElementById("inputDestinationToken").value = "";
+          document.getElementById("inputDestinationToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("destinationSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("destinationSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+
+      if (selText === "NFT.Storage") {
+        const nftSrcToken = document.getElementById("nftStorageToken").value;
+        if (nftSrcToken !== "") {
+          document.getElementById("destinationSubmitButton").disabled = false;
+          document.getElementById("inputDestinationToken").value = nftSrcToken;
+        } else {
+          document.getElementById("inputDestinationToken").style.visibility = "visible";
+          document.getElementById("inputDestinationToken").value = "";
+          document.getElementById("inputDestinationToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("destinationSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("destinationSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+
+      if (selText === "Web3.Storage") {
+        const web3SrcToken = document.getElementById("web3StorageToken").value;
+        if (web3SrcToken !== "") {
+          document.getElementById("destinationSubmitButton").disabled = false;
+          document.getElementById("inputDestinationToken").value = web3SrcToken;
+        } else {
+          document.getElementById("inputDestinationToken").style.visibility = "visible";
+          document.getElementById("inputDestinationToken").value = "";
+          document.getElementById("inputDestinationToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("destinationSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("destinationSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+
+      if (selText === "Estuary") {
+        const estuarySrcToken = document.getElementById("estuaryToken").value;
+        if (estuarySrcToken !== "") {
+          document.getElementById("destinationSubmitButton").disabled = false;
+          document.getElementById("inputDestinationToken").value = estuarySrcToken;
+        } else {
+          document.getElementById("inputDestinationToken").style.visibility = "visible";
+          document.getElementById("inputDestinationToken").value = "";
+          document.getElementById("inputDestinationToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("destinationSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("destinationSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+
+      if (selText === "Filebase") {
+        const filebaseSrcToken = document.getElementById("filebaseToken").value;
+        if (filebaseSrcToken !== "") {
+          document.getElementById("destinationSubmitButton").disabled = false;
+          document.getElementById("inputDestinationToken").value = filebaseSrcToken;
+        } else {
+          document.getElementById("inputDestinationToken").style.visibility = "visible";
+          document.getElementById("inputDestinationToken").value = "";
+          document.getElementById("inputDestinationToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("destinationSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("destinationSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+
+      if (selText === "Infura") {
+        const infuraSrcToken = document.getElementById("infuraProjectSecret").value;
+        if (infuraSrcToken !== "") {
+          document.getElementById("destinationSubmitButton").disabled = false;
+          document.getElementById("inputDestinationToken").value = infuraSrcToken;
+        } else {
+          document.getElementById("inputDestinationToken").style.visibility = "visible";
+          document.getElementById("inputDestinationToken").value = "";
+          document.getElementById("inputDestinationToken").addEventListener("input", function () {
+            if (isEmpty(this.value)) {
+              document.getElementById("destinationSubmitButton").disabled = true;
+              //console.log( "NAME is invalid (Empty)" )
+            } else {
+              document.getElementById("destinationSubmitButton").disabled = false;
+              //console.log( `NAME value is: ${this.value}` );
+            }
+          });
+        }
+      }
+    }
+  </script>
+  <script src="/webportal/scripts/main.js"></script>
+</html>

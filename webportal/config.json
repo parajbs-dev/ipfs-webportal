@@ -1,0 +1,1 @@
+{ "tushost": "localhost", "tusport": 11945, "tusprotocol": "http", "ipfshost": "localhost", "ipfsapiport": "5001", "ipfsgatewayport": "8080", "ipfsprotocol": "http" }

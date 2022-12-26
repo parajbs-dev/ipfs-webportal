@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<title>Pin Manager 📌</title>
+<style>
+img {
+    width: 80%;
+    display: block;
+    margin: 1em auto;
+}
+
+iframe {
+  display: block;
+  margin: 1em auto;
+}
+
+code {
+  background: var(--ag-theme-primary);
+  font-weight: bold;
+  padding: 0.25em;
+}
+
+
+
+h1 {
+  text-align: center;
+}
+
+/* Reset style for anchors added to headers */
+h2 a, h3 a, h4 a {
+  color: var(--ag-theme-text);
+  text-decoration: none;
+}
+
+h1 a {
+  color: var(--ag-theme-primary);
+  text-decoration: none;
+}
+
+h1:hover::after, h2:hover::after, h3:hover::after, h4:hover::after {
+  text-decoration: none !important;
+}
+h2::before {
+  content: "## ";
+  color: var(--ag-theme-secondary)
+}
+h3::before {
+  content: "### ";
+  color: var(--ag-theme-secondary)
+}
+h4::before {
+  content: "#### ";
+  color: var(--ag-theme-secondary)
+}
+
+
+  :root {
+    --pin-theme-text: var(--ag-theme-text, #000);
+    --pin-theme-background: var(--ag-theme-background, #FAFAFA);
+  }
+
+  body {
+    color: var(--pin-theme-text);
+    font-family: system-ui;
+  }
+
+  input, button, select {
+    box-sizing: border-box;
+    padding: 0.5em;
+    font-size: inherit;
+    font-family: inherit;
+    border: solid 1px var(--pin-theme-text);
+    background: var(--pin-theme-background);
+    color: inherit;
+  }
+
+  input {
+    flex: 1;
+  }
+
+  details {
+    margin-bottom: 1em;
+  }
+</style>
+<script type="module">
+import "./pin-list.js"
+import "./pin-manager.js"
+</script>
+
+<h1>Pin Manager 📌</h1>
+<details>
+  <summary>How does this work?</summary>
+  <p>
+    The Pin Manager lets you talk to multiple "IPFS Pinning Services at a time.
+    These services exist as remote backups for your data.
+    Currently we support the <a href="https://ipfs.github.io/pinning-services-api-spec/">IPFS Pinning Service API Specification</a> and the <a href="https://ipfscluster.io/">IPFS Cluster API Specification</a>.
+  </p>
+  <p>
+    When configuring an IPFS pinning service, place the <code>Authentication Token</code> into the password section of the URL.
+    For example, this could look like <a href="">https://:YourTokenHere@example.com/</a>.
+    Some services like IPFS cluster use "Basic Authentication" which means you will need to supply both a username and password.
+    Make sure you're putting your services behind an HTTPs gateway so that you don't expose your credentials to the network!
+  </P
+  <p>
+    If you are running a service and would like to quickly onboard new users into it, you can click the "link" in the service information and send it to somebody.
+    This link will contain a special "invite" parameter which will automatically configure pin-manager to use the service info when a person visits it.
+    Note that these links are not revokable, so make sure you only share them via trusted channels!
+  </p>
+  <p>
+    If you want to start pinning your IPFS data but don't know where to go, try signing up for an account with <a href="https://app.pinata.cloud/">Pinata</a>, creating a new <a href="https://app.pinata.cloud/keys">API Key</a> which has all the pinning service permissions enabled, then past a service URL that looks like <code>https://:Your_JWT_Token_Here@api.pinata.cloud/psa/</code>.
+  </p>
+</details>
+<pin-manager></pin-manager>
+<footer>
+  <a href="https://agregoreweb.github.io/pin-manager/">HTTPS link</a>
+</footer>

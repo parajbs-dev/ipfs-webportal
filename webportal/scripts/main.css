@@ -1,0 +1,446 @@
+      .box_row{
+        margin-top: 70px;
+        margin-bottom:  100px;
+      }
+      .section-intro{
+        text-align: center;
+        width: 200%;
+        border-radius: 50%;
+        padding-top: 15%;
+        padding-bottom: 8rem;
+        margin-top: -17%;
+        margin-left: -50%;
+        background-image: linear-gradient(45deg, #3f00ff 0, #000000 50%, #69c4cd 70%);
+      }
+      .section-browse{
+        text-align: center;
+        padding-bottom: 30px;
+        margin-top: -12rem !important;
+        margin-bottom: 3rem !important;
+        background-color:white ;
+        width: 90%;
+	height: 70px;
+        max-width: 950px;
+      }
+      .section-upload{
+        text-align: center;
+        padding-bottom: 30px;
+        margin-top: -5rem !important;
+        margin-bottom: 3rem !important;
+        background-color:white ;
+        width: 90%;
+        max-width: 950px;
+      }
+      .section-upload-box{
+        text-align: center;
+        padding-right: 30px;
+        padding-left: 30px;
+        padding-bottom: 30px;
+        margin-top: -10rem !important;
+        margin-bottom: 3rem !important;
+        background-color:white ;
+        width: 90%;
+        max-width: 950px;
+      }
+      .section-body{
+        padding: 30;
+        width: 90%;
+        max-width: 950px;
+        margin-top: -1rem !important;
+        margin-bottom: 1rem !important;
+        background-color: white;
+      }
+      .section-uploadListLabel{
+
+
+        margin-top: 1rem !important;
+        margin-bottom: 1.9rem !important;
+
+      }
+      .section-uploadList{
+        padding: 30;
+        width: 90%;
+        max-width: 950px;
+        margin-top: -1rem !important;
+        margin-bottom: 3rem !important;
+        background-color: white;
+      }
+      .section-footer{
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+        background-image: linear-gradient(190deg, #3f00ff 0, #000000 50%, #69c4cd 110%);
+      }
+
+.progress {
+	height: 4px;
+}
+
+
+.uppy-DragDrop-inner {
+  margin: 0;
+  text-align: center;
+  padding: 30px 40px;
+  line-height: 1.4; }
+
+.uppy-DragDrop-arrow {
+  width: 60px;
+  height: 60px;
+  fill: #e0e0e0;
+  margin-bottom: 17px; }
+
+.uppy-DragDrop-arrow-min {
+  width: 25px;
+  height: 25px;
+  fill: #e0e0e0;
+ }
+
+.uppy-DragDrop-label {
+  display: block;
+  cursor: pointer;
+  font-size: 1.14em;
+  margin-bottom: 5px; }
+
+.uppy-DragDrop-note {
+  font-size: 1em;
+  color: #adadad; }
+
+   .dragged-over {
+  border: 1px solid;
+}
+
+ #drop-zone {
+    /*Sort of important*/
+
+    /*Sort of important*/
+    height: 200px;
+    position:absolute;
+    left:0%;
+    top:10px;
+    margin-left:0px;
+    border: 2px dashed rgba(0,0,0,.3);
+    border-radius: 20px;
+    font-family: Arial;
+    text-align: center;
+    position: relative;
+    line-height: 180px;
+    font-size: 20px;
+    color: rgba(0,0,0,.3);
+}
+
+ .drop-zone {
+    /*Sort of important*/
+    width: 100%;
+    /*Sort of important*/
+    height: 200px;
+    position:absolute;
+    left:0%;
+    top:10px;
+    margin-left:0px;
+    border: 2px dashed rgba(0,0,0,.3);
+    border-radius: 20px;
+    font-family: Arial;
+    text-align: center;
+    position: relative;
+    line-height: 180px;
+    font-size: 20px;
+    color: rgba(0,0,0,.3);
+}
+
+ #drop-zone3 {
+    /*Sort of important*/
+    width: 100%;
+    /*Sort of important*/
+    height: 200px;
+    position:absolute;
+    left:0%;
+    top:10px;
+    margin-left:0px;
+    border: 2px dashed rgba(0,0,0,.3);
+    border-radius: 20px;
+    font-family: Arial;
+    text-align: center;
+    position: relative;
+    line-height: 180px;
+    font-size: 20px;
+    color: rgba(0,0,0,.3);
+}
+
+
+
+
+    #drop-zone input {
+        /*Important*/
+        position: absolute;
+        /*Important*/
+        cursor: pointer;
+        left: 0px;
+        top: 0px;
+        /*Important This is only comment out for demonstration purposes.
+        opacity:0; */
+    }
+
+    .drop-zone input {
+        /*Important*/
+        position: absolute;
+        /*Important*/
+        cursor: pointer;
+        left: 0px;
+        top: 0px;
+        /*Important This is only comment out for demonstration purposes.
+        opacity:0; */
+    }
+
+    /*Important*/
+    #drop-zone.mouse-over {
+        border: 2px dashed rgba(0,0,0,.5);
+        color: rgba(0,0,0,.5);
+    }
+
+
+/*If you dont want the button*/
+#clickHere {
+    position: absolute;
+    cursor: pointer;
+    left: 50%;
+    top: 61%;
+    margin-left: -50px;
+    margin-top: 20px;
+    line-height: 26px;
+    color: white;
+    font-size: 12px;
+    width: 100px;
+    height: 26px;
+    border-radius: 4px;
+    background-color: #3b85c3;
+
+}
+
+#clickHere:hover {
+    background-color: #4499DD;
+
+}  
+
+div .panel-wrapper{
+    background: rgba(var(--bs-primary-rgb))!important;
+    width: 460px;
+    display: none;
+   opacity: 1; 
+    postion:relative;
+}
+div .trigger-m{
+    height: 20px;
+    position: absolute;
+    padding: 2px 1px;
+    postion:absolute;
+    color: #fff;
+}
+
+  form {
+    display: flex;
+    flex-direction: column;
+    margin: 0.5em 0px;
+    padding: 0px;
+  }
+
+  form input {
+    flex: 1;
+  }
+  auto-ipfs-upload label {
+    display: flex;
+    flex-direction: column;
+
+    padding: 2em;
+    align-items: center;
+    justify-content: middle;
+  }
+  auto-ipfs-upload input {
+    display: none;
+  }
+  auto-ipfs-upload {
+    display: block;
+    margin: 0.5em 0px;
+  }
+
+ .pin-zone {
+    /*Sort of important*/
+    width: 100%;
+
+    position:absolute;
+    left:0%;
+    top:10px;
+    margin-left:0px;
+    padding-left:15px;
+    padding-right:15px;
+    padding-top:15px;
+    padding-bottom:10px;
+    border: 2px dashed rgba(0,0,0,.3);
+    border-radius: 20px;
+    position: relative;
+}
+
+img {
+    width: 80%;
+    display: block;
+    margin: 1em auto;
+}
+
+iframe {
+  display: block;
+  margin: 1em auto;
+}
+
+code {
+  background: var(--ag-theme-primary);
+  font-weight: bold;
+  padding: 0.25em;
+}
+
+h1 {
+  text-align: center;
+}
+
+/* Reset style for anchors added to headers */
+h2 a, h3 a, h4 a {
+  color: var(--ag-theme-text);
+  text-decoration: none;
+}
+
+h1 a {
+  color: var(--ag-theme-primary);
+  text-decoration: none;
+}
+
+h1:hover::after, h2:hover::after, h3:hover::after, h4:hover::after {
+  text-decoration: none !important;
+}
+h2::before {
+  content: "## ";
+  color: var(--ag-theme-secondary)
+}
+h3::before {
+  content: "### ";
+  color: var(--ag-theme-secondary)
+}
+h4::before {
+  content: "# ";
+  color: var(--ag-theme-secondary)
+}
+
+  :root {
+    --pin-theme-text: var(--ag-theme-text, #000);
+    --pin-theme-background: var(--ag-theme-background, #FAFAFA);
+  }
+
+  body {
+    color: var(--pin-theme-text);
+    font-family: system-ui;
+  }
+
+  input, button, select {
+    box-sizing: border-box;
+    font-size: inherit;
+    font-family: inherit;
+    border: solid 1px var(--pin-theme-text);
+  }
+
+  input {
+    flex: 1;
+  }
+
+  details {
+    margin-bottom: 1em;
+  }
+
+
+#tabs {
+   width: 101%;
+    height:40px; 
+   margin-bottom: -11px;
+  margin-left: 0px;
+}
+a {cursor:pointer;}
+
+#tabs li {
+	   width: 33%;		   
+    float:left; 
+    list-style:none; 
+    border-top:1px solid #ccc; 
+    border-left:1px solid #ccc; 
+    border-right:1px solid #ccc; 
+    border-top-left-radius:3px;  
+    border-top-right-radius:3px;
+      outline:none;
+}
+
+#tabs li a {
+    height:44px; 
+    font-family:Arial, Helvetica, sans-serif; 
+    font-size: medium;
+    font-weight: bolder; 
+    color: #5685bc;;
+   padding-top: 5px;
+   padding-bottom: 8px; 
+    display:block; 
+    background: #FFF;
+    border-top-left-radius:3px; 
+    border-top-right-radius:3px; 
+    text-decoration:none;
+    outline:none;
+}
+
+#tabs li a.inactive{
+    padding-top:5px;
+    padding-bottom:8px;
+    color:#666666;
+    background: #EEE;
+   outline:none;
+   border-bottom: solid 1px #CCC;
+}
+
+#tabs li a:hover, #tabs li a.inactive:hover {
+    color: #5685bc;
+      outline:none;
+}
+
+.container2 {
+    clear:both;           
+    width:100%; 
+        padding-right: 20px;
+        padding-left: 20px;
+    text-align:left;
+}
+
+.container2 h2 { margin-left: 15px;  margin-right: 15px;  margin-bottom: 10px; color: #5685bc; }
+
+.container2 p { margin-left: 15px; margin-right: 15px;  margin-top: 10px; margin-bottom: 10px; line-height: 1.3; font-size: small; }
+
+.container2 ul { margin-left: 25px; font-size: small; line-height: 1.4; list-style-type: disc; }
+
+.container2 li { padding-bottom: 5px; margin-left: 5px;}
+
+
+ol, ul {
+    padding-left: 0rem;
+}
+
+
+  .table-striped2 {
+  background-color: blue;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
