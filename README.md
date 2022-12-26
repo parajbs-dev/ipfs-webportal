@@ -25,11 +25,7 @@ http://localhost:11945/webportal/
 
 - Start the node with https:
 
-```yarn start```
-
-or
-
-```node server.js```
+```node server.js --https```
 
 Will listen on port 11945 of localhost with https.
 
